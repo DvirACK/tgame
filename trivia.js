@@ -1,24 +1,96 @@
 const questionsData = [
     {
-        question: "What is the capital of France?",
+        question: "Which planet is the smallest in our solar system?",
         options: {
-            a: "Paris",
-            b: "Berlin",
-            c: "London"
+            a: "Mars",
+            b: "Mercury",
+            c: "Venus"
+        },
+        correctOption: "b"
+    },
+    {
+        question: "Which country is known as the Land of the Rising Sun?",
+        options: {
+            a: "China",
+            b: "Japan",
+            c: "South Korea"
+        },
+        correctOption: "b"
+    },
+    {
+        question: "What does a Geiger counter measure?",
+        options: {
+            a: "Humidity",
+            b: "Radiation",
+            c: "Temperature"
+        },
+        correctOption: "b"
+    },
+    {
+        question: "Which of the following elements is a Noble Gas?",
+        options: {
+            a: "Krypton",
+            b: "Chlorine",
+            c: "Iodine"
         },
         correctOption: "a"
     },
     {
-        question: "Which planet is known as the Red Planet?",
+        question: "Who wrote the novel 'To Kill a Mockingbird'?",
         options: {
-            a: "Mars",
-            b: "Earth",
-            c: "Jupiter"
+            a: "Ernest Hemingway",
+            b: "F. Scott Fitzgerald",
+            c: "Harper Lee"
+        },
+        correctOption: "c"
+    },
+    {
+        question: "Which ocean is the largest on Earth?",
+        options: {
+            a: "Atlantic Ocean",
+            b: "Indian Ocean",
+            c: "Pacific Ocean"
+        },
+        correctOption: "c"
+    },
+    {
+        question: "What is the capital city of Australia?",
+        options: {
+            a: "Canberra",
+            b: "Sydney",
+            c: "Melbourne"
         },
         correctOption: "a"
     },
-    // Add more questions here
+    {
+        question: "In which year did the Titanic sink?",
+        options: {
+            a: "1910",
+            b: "1912",
+            c: "1914"
+        },
+        correctOption: "b"
+    },
+    {
+        question: "Which country is known for inventing the sauna?",
+        options: {
+            a: "Sweden",
+            b: "Norway",
+            c: "Finland"
+        },
+        correctOption: "c"
+    },
+    {
+        question: "Which famous scientist developed the theory of general relativity?",
+        options: {
+            a: "Isaac Newton",
+            b: "Galileo Galilei",
+            c: "Albert Einstein"
+        },
+        correctOption: "c"
+    },
 ];
+
 
 class TriviaGame {
     constructor(questionsData) {
@@ -102,15 +174,48 @@ class TriviaGame {
     processAnswer(isCorrect) {
         this.stopTimer();
         this.avgTimePerQuestion += 10 - this.timeRemaining;
+
+        const answerButtons = document.querySelectorAll('.answer-btn');
+        answerButtons.forEach((button) => {
+            const buttonIsCorrect = button.dataset.correct === "true";
+
+            if (button.classList.contains('pressed')) {
+                if (isCorrect) {
+                    button.classList.add('correct');
+                } else {
+                    button.classList.add('incorrect');
+                    if (buttonIsCorrect) {
+                        button.classList.add('correct');
+                    }
+                }
+            } else if (buttonIsCorrect) {
+                button.classList.add('correct');
+            }
+
+            button.disabled = true;
+        });
+
         if (isCorrect) {
             this.correctAnswers++;
             this.totalPoints += 10 + (2 * this.timeRemaining);
+            document.querySelector('.score').textContent = `Score: ${this.totalPoints}`; // Update the score after every correct answer
+
         }
+
         setTimeout(() => {
+            answerButtons.forEach((button) => {
+                button.classList.remove('correct', 'incorrect');
+                button.disabled = false;
+            });
+
             this.currentQuestionIndex++;
             this.showNextQuestion();
-        }, 3000);
+        }, 2000);
     }
+
+
+
+
 
 
 }
@@ -123,11 +228,18 @@ document.querySelector('.start-btn').addEventListener('click', () => {
     game.startGame();
 
     document.querySelectorAll('.answer-btn').forEach((button) => {
-        button.addEventListener('click', (event) => {
-                        const isCorrect = event.target.dataset.correct === "true";
+    button.addEventListener('click', (event) => {
+        const button = event.target;
+        button.classList.add('pressed');
+
+        setTimeout(() => {
+            button.classList.remove('pressed');
+            const isCorrect = button.dataset.correct === "true";
             game.processAnswer(isCorrect);
-        });
+        }, 750);
     });
+});
+
 });
 
 document.querySelector('.share-btn').addEventListener('click', () => {
