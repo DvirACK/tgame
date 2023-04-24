@@ -1,2 +1,2 @@
 # tgame
-test tetris game
+test trivia game
