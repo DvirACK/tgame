@@ -104,7 +104,7 @@ class TriviaGame {
     }
 
     // Add methods here
-	
+
     // ... (constructor and properties)
 
     startGame() {
@@ -184,22 +184,22 @@ class TriviaGame {
                     button.classList.add('correct');
                 } else {
                     button.classList.add('incorrect');
-                    if (buttonIsCorrect) {
-                        button.classList.add('correct');
-                    }
                 }
-            } else if (buttonIsCorrect) {
-                button.classList.add('correct');
+                button.disabled = true;
             }
-
-            button.disabled = true;
         });
+
+        // Find and highlight the correct answer
+        const correctButton = Array.from(answerButtons).find(
+            (btn) => btn.dataset.correct === "true"
+        );
+        correctButton.classList.add('correct');
+        correctButton.disabled = true;
 
         if (isCorrect) {
             this.correctAnswers++;
             this.totalPoints += 10 + (2 * this.timeRemaining);
             document.querySelector('.score').textContent = `Score: ${this.totalPoints}`; // Update the score after every correct answer
-
         }
 
         setTimeout(() => {
@@ -217,7 +217,6 @@ class TriviaGame {
 
 
 
-
 }
 
 // end of game
@@ -228,23 +227,23 @@ document.querySelector('.start-btn').addEventListener('click', () => {
     game.startGame();
 
     document.querySelectorAll('.answer-btn').forEach((button) => {
-    button.addEventListener('click', (event) => {
-        const button = event.target;
-        button.classList.add('pressed');
+        button.addEventListener('click', (event) => {
+            const button = event.target;
+            button.classList.add('pressed');
 
-        setTimeout(() => {
-            button.classList.remove('pressed');
-            const isCorrect = button.dataset.correct === "true";
-            game.processAnswer(isCorrect);
-        }, 750);
+            setTimeout(() => {
+                button.classList.remove('pressed');
+                const isCorrect = button.dataset.correct === "true";
+                game.processAnswer(isCorrect);
+            }, 750);
+        });
     });
-});
 
 });
 
 document.querySelector('.share-btn').addEventListener('click', () => {
     const shareText = `I scored ${document.querySelector('.total-points').textContent} points in the Trivia Game! Can you beat my score?`;
-    const shareUrl = window.location.href;
+    const shareUrl = 'https://www.gptpuzzle.com/blog/categories/trivia';
 
     if (navigator.share) {
         navigator.share({
